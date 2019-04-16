@@ -17,8 +17,9 @@ class CustomParticle : public ofxBox2dCircle {
 public:
 
     ofColor color;
+    float volRadius;
     void draw() {
-        float radius = getRadius();
+        float radius = getRadius() + volRadius;
         
         glPushMatrix();
         glTranslatef(getPosition().x, getPosition().y, 0);
@@ -32,6 +33,7 @@ public:
 };
 
 // -------------------------------------------------
+#define BUFSIZE 512
 
 class ofApp : public ofBaseApp{
 public:
@@ -71,4 +73,10 @@ public:
     
     vector <ofPolyline> lines;//線の配列
     vector <ofPolyline> faceLines;
+    
+    ofSoundStream soundStream;
+    float smoothedVol;
+    float scaledVol;
+    void audioIn(ofSoundBuffer & input);
+    
 };

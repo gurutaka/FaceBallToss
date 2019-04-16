@@ -12,6 +12,8 @@ static bool removeShapeOffScreen(shared_ptr<CustomParticle> shape) {
 //--------------------------------------------------------------
 void ofApp::setup(){
     
+    ofSetFrameRate(60);
+    
     // Setup grabber
     width = 1280;
     height = 720;
@@ -24,21 +26,39 @@ void ofApp::setup(){
     
     box2D.init();
     box2D.setGravity(0, 5);
-//    box2D.createBounds();//周囲に壁を設置
-    box2D.createGround();
+    box2D.createBounds();//周囲に壁を設置
+//    box2D.createGround();
     box2D.setFPS(30.0);
-//    box2D.registerGrabbing();
+    box2D.registerGrabbing();
     
     timerLimit = 7.5;
     timer = 0;
     faceDrawFlg = true;
     limitBottomHeight = 50;
     
+    ofSoundStreamSettings settings;
+    
+    auto devices = soundStream.getMatchingDevices("default");
+    if(!devices.empty()){
+        settings.setInDevice(devices[0]);
+    }
+    
+    int bufferSize = 256;
+    smoothedVol = 0.0;
+    scaledVol = 0.0;
+    settings.setInListener(this);
+    settings.sampleRate = 44100;
+    settings.numOutputChannels = 0;
+    settings.numInputChannels = 1;
+    settings.bufferSize = bufferSize;
+    soundStream.setup(settings);
 }
+
 
 //--------------------------------------------------------------
 void ofApp::update(){
     
+    scaledVol = ofMap(smoothedVol, 0.02, 0.17, 0.0, 1.0, true);
     grabber.update();
     colorImg.setFromPixels(grabber.getPixels().getData(), width, height);
     colorImg.mirror(false, true);
@@ -49,6 +69,8 @@ void ofApp::update(){
     
     ofRemove(circles, removeShapeOffScreen);
     box2D.update();
+    
+    
     
     timer ++;
     if(timer > timerLimit){
@@ -182,6 +204,8 @@ void ofApp::update(){
     }
 }
 
+
+
 //--------------------------------------------------------------
 void ofApp::draw(){
     
@@ -189,14 +213,14 @@ void ofApp::draw(){
     colorImg.draw(0,0, width,height);
     
     // 顔のラインが消える領域
-    setFieldFadeFaceLine();
+//    setFieldFadeFaceLine();
     
     // Draw text UI
     ofDrawBitmapStringHighlight("Framerate : "+ofToString(ofGetFrameRate()), 10, 20);
     ofDrawBitmapStringHighlight("Tracker thread framerate : "+ofToString(tracker.getThreadFps()), 10, 40);
     ofDrawBitmapStringHighlight("Reset Key : Space", 10, 60);
     ofDrawBitmapStringHighlight("Face Line Toggle: f", 10, 80);
-    
+    ofDrawBitmapStringHighlight("smoothedVol : "+ofToString(smoothedVol), 10, 120);
 #ifndef __OPTIMIZE__
     ofSetColor(ofColor::red);
     ofDrawBitmapString("Warning! Run this app in release mode to get proper performance!",10,100);
@@ -210,6 +234,10 @@ void ofApp::draw(){
     
     
     for(int i = 0; i<circles.size();i++){
+        circles[i].get()->volRadius = scaledVol * 100;
+        if(smoothedVol > 0.05){
+            circles[i].get()->addForce(ofVec2f(ofRandom(-1,1),ofRandom(-1,1)).normalize(), 10000);
+        }
         circles[i].get()->draw();
     }
     
@@ -254,6 +282,7 @@ void ofApp::addCircle(){
     circles.back().get()->color.r = ofRandom(255);
     circles.back().get()->color.g = ofRandom(255);
     circles.back().get()->color.b = ofRandom(255);
+    circles.back().get()->volRadius = 0.0;
 }
 
 void ofApp::fireRightCircle(){
@@ -286,7 +315,37 @@ void ofApp::setCircleFireDirection(){
     }
     
 }
-
+//--------------------------------------------------------------
+void ofApp::audioIn(ofSoundBuffer & input){
+    
+    float curVol = 0.0;
+    
+    // samples are "interleaved"
+    int numCounted = 0;
+    
+    //lets go through each sample and calculate the root mean square which is a rough way to calculate volume
+    for (size_t i = 0; i < input.getNumFrames(); i++){
+//        left[i]        = input[i*2]*0.5;
+//        right[i]    = input[i*2+1]*0.5;
+//
+//        curVol += left[i] * left[i];
+//        curVol += right[i] * right[i];
+        curVol += pow (input[i*2]*0.5, 2) + pow (input[i*2 + 1]*0.5, 2) ;
+        numCounted+=2;
+    }
+    
+    //this is how we get the mean of rms :)
+    curVol /= (float)numCounted;//型変換
+    
+    // this is how we get the root of rms :)
+    curVol = sqrt( curVol );
+    
+    smoothedVol *= ofRandom(0.93,0.99);
+    smoothedVol += 0.07 * curVol;
+//
+//    bufferCounter++;
+    
+}
 //--------------------------------------------------------------
 void ofApp::setFieldFadeFaceLine(){
     ofPushStyle();
@@ -295,8 +354,6 @@ void ofApp::setFieldFadeFaceLine(){
     ofRect(0, height - limitBottomHeight, width, height);
     ofPopStyle();
 }
-
-
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
     if(key == 'c'){
