@@ -10,34 +10,34 @@
 #include "ofxFaceTracker2.h"
 #include "ofxBox2d.h"
 #include "ofxOpenCv.h"
+#include "Client.hpp"
+#include "Box2dController.hpp"
+#define PORT 8888
 
 // ------------------------------------------------- a simple extended box2d circle
-class CustomParticle : public ofxBox2dCircle {
-    
-public:
-
-    ofColor color;
-    float volRadius;
-    void draw() {
-        float radius = getRadius() + volRadius;
-        
-        glPushMatrix();
-        glTranslatef(getPosition().x, getPosition().y, 0);
-        
-        ofSetColor(color.r, color.g, color.b);
-        ofFill();
-        ofDrawCircle(0, 0, radius);
-        
-        glPopMatrix();
-    }
-};
+//class CustomParticle : public ofxBox2dCircle {
+//public:
+//
+//    ofColor color;
+//    float volRadius;
+//    void draw() {
+//        float radius = getRadius() + volRadius;
+//
+//        glPushMatrix();
+//        glTranslatef(getPosition().x, getPosition().y, 0);
+//
+//        ofSetColor(color.r, color.g, color.b);
+//        ofFill();
+//        ofDrawCircle(0, 0, radius);
+//
+//        glPopMatrix();
+//    }
+//};
 
 // -------------------------------------------------
-#define BUFSIZE 512
 
 class ofApp : public ofBaseApp{
 public:
-    
     void setup();
     void update();
     void draw();
@@ -45,12 +45,10 @@ public:
     void mouseDragged(int x, int y, int button);
     void mousePressed(int x, int y, int button);
     void mouseReleased(int x, int y, int button);
-    void addCircle();
-    void fireRightCircle();
-    void fireLeftCircle();
-    void fireTopCircle();
-    void setCircleFireDirection();
-    void setFieldFadeFaceLine();
+    void drawTextUI();
+    void drawEdgeLine();
+    void setFaceLine();
+    void setMicrophoneSetting();
     
     int getInvertedYaxis(int x);
     int width;
@@ -61,16 +59,7 @@ public:
     ofxFaceTracker2 tracker;
     ofVideoGrabber grabber;
     ofxCvColorImage colorImg;
-    ofxBox2d box2D;
-    int timer;
-    int timerLimit;
-    int limitBottomHeight;
-    
-    vector <ofPtr <CustomParticle> > circles;
-    vector <ofPtr <ofxBox2dRect> > boxes;
-    vector <shared_ptr <ofxBox2dEdge> > edges;
-    vector <ofxBox2dEdge> faceEdge;
-    
+
     vector <ofPolyline> lines;//線の配列
     vector <ofPolyline> faceLines;
     
@@ -78,5 +67,10 @@ public:
     float smoothedVol;
     float scaledVol;
     void audioIn(ofSoundBuffer & input);
+    
+    void updateClient();
+    ofxOscReceiver  receiver;
+    Client client;
+    Box2dController box2dController;
     
 };
