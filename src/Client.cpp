@@ -14,43 +14,38 @@ void Client::update(ofxOscMessage message){
     ofxOscMessage m = message;
     touchUp = false;
     
-    // Clientオブジェクトの更新
-    if ( m.getAddress() == "/touch/position"){
-
-//        if(m.getArgAsString(0) == "Down"){
-//            lines.push_back(ofPolyline());
-//            std::cout << "down!" << endl;
-//        }
-//        pos.x = ofGetWidth() * m.getArgAsFloat(0);
-//        pos.y = ofGetHeight() * m.getArgAsFloat(1);
-//        lines.back().addVertex(pos.x,pos.y);
-
-//        if(m.getArgAsString(0) == "Up"){
-//            touchUp = true;
-//        }else{
-//            pos.x = ofGetWidth() * m.getArgAsFloat(0);
-//            pos.y = ofGetHeight() * m.getArgAsFloat(1);
-//            lines.back().addVertex(pos);
-//        }
+    
+    if ( m.getAddress() == "/touchDown/position"){
+        clientLines.push_back(ofPolyline());
+        pos.x = ofGetWidth() * m.getArgAsFloat(0);
+        pos.y = ofGetHeight() * m.getArgAsFloat(1);
+        clientLines.back().addVertex(pos);
     }
     
-        if ( m.getAddress() == "/touch/position"){
-                pos.x = ofGetWidth() * m.getArgAsFloat(0);
-                pos.y = ofGetHeight() * m.getArgAsFloat(1);
-        }
+    if ( m.getAddress() == "/touchMoved/position"){
+        pos.x = ofGetWidth() * m.getArgAsFloat(0);
+        pos.y = ofGetHeight() * m.getArgAsFloat(1);
+        clientLines.back().addVertex(pos);
+    }
+    
+    if ( m.getAddress() == "/touchMoved/position"){
+        touchUp = m.getArgAsBool(0);
+    }
     
 }
 
 //--------------------------------------------------------------
 void Client::draw(){
-    ofCircle(pos.x, pos.y, 30);
+    ofNoFill();
+    ofSetLineWidth(2.0);
+    ofSetColor(ofColor::red);
     
-    for (int i=0; i<lines.size(); i++) {
-        lines[i].draw();
+    for (int i=0; i<clientLines.size(); i++) {
+        clientLines[i].draw();
     }
 }
 
 //--------------------------------------------------------------
 void Client::clear(){
-    lines.clear();
+    clientLines.clear();
 }

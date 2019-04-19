@@ -34,7 +34,7 @@ void ofApp::setup(){
 //--------------------------------------------------------------
 void ofApp::update(){
     
-//    updateClient();
+    updateClient();
     
     scaledVol = ofMap(smoothedVol, 0.02, 0.17, 0.0, 1.0, true);
     grabber.update();
@@ -73,11 +73,12 @@ void ofApp::draw(){
     box2dController.drawFaceLine(faceLines, faceDrawFlg);
     box2dController.draw(scaledVol, smoothedVol);
     drawEdgeLine();
+    client.draw();
+    
     
     ofPopStyle();
     ofPopMatrix();
     
-//    client.draw();
 }
 
 //--------------------------------------------------------------
@@ -136,9 +137,9 @@ void ofApp::updateClient(){
         client.update(m);
     }
     
-//    if(client.touchUp){
-//        box2dController.addLineEdges(client.lines);
-//    }
+    if(client.touchUp && client.clientLines.size() > 0){
+        box2dController.addLineEdges(client.clientLines);
+    }
 }
 
 
@@ -203,7 +204,7 @@ void ofApp::keyPressed(int key){
     if(key == ' '){
         lines.clear();
         box2dController.clear();
-//        client.clear();
+        client.clear();
     }
 }
 

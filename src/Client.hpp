@@ -16,8 +16,8 @@ public:
     void draw();
     void clear();
     ofPoint pos;
-    bool touchUp = false;
-    vector <ofPolyline> lines;//線の配列
+    bool touchUp;
+    vector <ofPolyline> clientLines;//線の配列
 };
 
 #endif /* Client_hpp */
