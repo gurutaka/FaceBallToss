@@ -24,6 +24,7 @@ void Box2dController::setup(){
 //--------------------------------------------------------------
 void Box2dController::update(){
     box2D.update();
+//    ofRemove(circles, removeShapeOffScreen);画面外のモノを削除
 }
 
 //--------------------------------------------------------------
@@ -103,12 +104,12 @@ void Box2dController::addLineEdges(vector <ofPolyline> lines){
 }
 
 //--------------------------------------------------------------
-void Box2dController::changeCircleRadius(ofPtr <CustomParticle1> circle, float scaledVol){
+void Box2dController::changeCircleRadius(ofPtr <CustomParticle> circle, float scaledVol){
     circle.get()->volRadius = scaledVol * 100;
 }
 
 //--------------------------------------------------------------
-void Box2dController::checkExplosion(ofPtr <CustomParticle1> circle, float smoothedVol){
+void Box2dController::checkExplosion(ofPtr <CustomParticle> circle, float smoothedVol){
     if(smoothedVol > 0.05){
         circle.get()->addForce(ofVec2f(ofRandom(-1,1),ofRandom(-1,1)).normalize(), 20000);
     };
@@ -132,7 +133,7 @@ void Box2dController::addInervalCircle(){
 }
 //--------------------------------------------------------------
 void Box2dController::addCircle(){
-    circles.push_back(std::make_shared<CustomParticle1>());
+    circles.push_back(std::make_shared<CustomParticle>());
     circles.back().get()->setPhysics(3.0 * 10, 0.53 / 3, 0.1 * 10);
     circles.back().get()->color.r = ofRandom(255);
     circles.back().get()->color.g = ofRandom(255);
@@ -170,3 +171,12 @@ void Box2dController::setCircleFireDirection(){
             break;
     }
 }
+
+//--------------------------------------------------------------
+
+//bool Box2dController::removeShapeOffScreen(shared_ptr<CustomParticle> shape) {
+//    if (!ofRectangle(-30, -400, ofGetWidth()+100, ofGetHeight()+400).inside(shape.get()->getPosition())) {
+//        return true;
+//    }
+//    return false;
+//}

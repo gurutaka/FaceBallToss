@@ -14,26 +14,6 @@
 #include "Box2dController.hpp"
 #define PORT 8888
 
-// ------------------------------------------------- a simple extended box2d circle
-//class CustomParticle : public ofxBox2dCircle {
-//public:
-//
-//    ofColor color;
-//    float volRadius;
-//    void draw() {
-//        float radius = getRadius() + volRadius;
-//
-//        glPushMatrix();
-//        glTranslatef(getPosition().x, getPosition().y, 0);
-//
-//        ofSetColor(color.r, color.g, color.b);
-//        ofFill();
-//        ofDrawCircle(0, 0, radius);
-//
-//        glPopMatrix();
-//    }
-//};
-
 // -------------------------------------------------
 
 class ofApp : public ofBaseApp{

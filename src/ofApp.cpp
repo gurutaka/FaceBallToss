@@ -1,14 +1,7 @@
 #include "ofApp.h"
 #include "ofxOsc.h"
 
-//--------------------------------------------------------------
 
-//static bool removeShapeOffScreen(shared_ptr<CustomParticle> shape) {
-//    if (!ofRectangle(-30, -400, ofGetWidth()+100, ofGetHeight()+400).inside(shape.get()->getPosition())) {
-//        return true;
-//    }
-//    return false;
-//}
 
 //--------------------------------------------------------------
 void ofApp::setup(){
@@ -22,7 +15,7 @@ void ofApp::setup(){
     ofSetWindowShape(width, height);
     grabber.setup(width,height);
     colorImg.allocate(width,height);
-
+    
     tracker.setup();
     
     faceDrawFlg = true;
@@ -41,7 +34,7 @@ void ofApp::setup(){
 //--------------------------------------------------------------
 void ofApp::update(){
     
-    updateClient();
+//    updateClient();
     
     scaledVol = ofMap(smoothedVol, 0.02, 0.17, 0.0, 1.0, true);
     grabber.update();
@@ -59,6 +52,7 @@ void ofApp::update(){
     faceLines.clear();
     box2dController.clearFaceEdge();
     
+    setFaceLine();
 
 }
 
@@ -83,7 +77,7 @@ void ofApp::draw(){
     ofPopStyle();
     ofPopMatrix();
     
-    client.draw();
+//    client.draw();
 }
 
 //--------------------------------------------------------------
@@ -141,6 +135,10 @@ void ofApp::updateClient(){
         receiver.getNextMessage(m);
         client.update(m);
     }
+    
+//    if(client.touchUp){
+//        box2dController.addLineEdges(client.lines);
+//    }
 }
 
 
@@ -205,6 +203,7 @@ void ofApp::keyPressed(int key){
     if(key == ' '){
         lines.clear();
         box2dController.clear();
+//        client.clear();
     }
 }
 

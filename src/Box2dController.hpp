@@ -10,8 +10,10 @@
 
 #include "ofxBox2d.h"
 #include "ofMain.h"
+#include "Client.hpp"
 
-class CustomParticle1 : public ofxBox2dCircle {
+
+class CustomParticle : public ofxBox2dCircle {
 public:
     ofColor color;
     float volRadius;
@@ -31,6 +33,8 @@ public:
 
 class Box2dController {
 public:
+   
+    
     
     void setup();
     void update();
@@ -43,8 +47,8 @@ public:
     void addInervalCircle();
     void addLineEdges(vector <ofPolyline> lines);
     
-    void changeCircleRadius(ofPtr <CustomParticle1> circle, float scaledVol);
-    void checkExplosion(ofPtr <CustomParticle1> circle, float smoothedVol);
+    void changeCircleRadius(ofPtr <CustomParticle> circle, float scaledVol);
+    void checkExplosion(ofPtr <CustomParticle> circle, float smoothedVol);
     
     void fireRightCircle();
     void fireLeftCircle();
@@ -58,11 +62,13 @@ public:
     int timer;
     int timerLimit;
     
-    vector <ofPtr <CustomParticle1> > circles;
+    vector <ofPtr <CustomParticle> > circles;
     vector <ofPtr <ofxBox2dRect> > boxes;
-
     vector <shared_ptr <ofxBox2dEdge> > edges;
     vector <ofxBox2dEdge> faceEdge;
+    
+//    static bool removeShapeOffScreen(shared_ptr<CustomParticle> shape);
+    
 };
 
 
