@@ -14,7 +14,6 @@ void Client::update(ofxOscMessage message){
     ofxOscMessage m = message;
     touchUp = false;
     
-    
     if ( m.getAddress() == "/touchDown/position"){
         clientLines.push_back(ofPolyline());
         pos.x = ofGetWidth() * m.getArgAsFloat(0);
@@ -28,8 +27,11 @@ void Client::update(ofxOscMessage message){
         clientLines.back().addVertex(pos);
     }
     
-    if ( m.getAddress() == "/touchMoved/position"){
-        touchUp = m.getArgAsBool(0);
+    if ( m.getAddress() == "/deleteCircle/info"){
+        color.r = m.getArgAsFloat(0);
+        color.g = m.getArgAsFloat(1);
+        color.b = m.getArgAsFloat(2);
+        radius = m.getArgAsFloat(3);
     }
     
 }

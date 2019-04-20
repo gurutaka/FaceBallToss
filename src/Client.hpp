@@ -17,6 +17,9 @@ public:
     void clear();
     ofPoint pos;
     bool touchUp;
+    bool circleFallFlg;
+    ofColor color;
+    float radius;
     vector <ofPolyline> clientLines;//線の配列
 };
 

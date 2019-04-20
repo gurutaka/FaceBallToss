@@ -33,9 +33,6 @@ public:
 
 class Box2dController {
 public:
-   
-    
-    
     void setup();
     void update();
     void draw(float scaledVol, float smoothedVol);
@@ -44,6 +41,7 @@ public:
     void drawFaceLine(vector <ofPolyline> faceLines, bool faceDrawFlg);
     void addBox(int mouseX, int mouseY);
     void addCircle();
+    void fallCircleFromIos(ofColor color,float radisu);
     void addInervalCircle();
     void addLineEdges(vector <ofPolyline> lines);
     

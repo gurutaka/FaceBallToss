@@ -27,7 +27,7 @@ void ofApp::setup(){
     receiver.setup( PORT );
     setMicrophoneSetting();
     box2dController.setup();
-    
+
 }
 
 
@@ -135,11 +135,17 @@ void ofApp::updateClient(){
         ofxOscMessage m;
         receiver.getNextMessage(m);
         client.update(m);
+        
+        if(m.getAddress() == "/deleteCircle/info"){
+            box2dController.fallCircleFromIos(client.color,client.radius);
+        }
+        
+        if(m.getAddress() == "/touchUp/position"){
+            box2dController.addLineEdges(client.clientLines);
+        }
     }
+
     
-    if(client.touchUp && client.clientLines.size() > 0){
-        box2dController.addLineEdges(client.clientLines);
-    }
 }
 
 
