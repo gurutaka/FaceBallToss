@@ -13,18 +13,20 @@
 void Box2dController::setup(){
     box2D.init();
     box2D.setGravity(0, 5);
-    box2D.createBounds();//周囲に壁を設置
+    box2D.createBounds();//周囲に壁を設置★
 //    box2D.createGround();
     box2D.setFPS(30.0);
 //    box2D.registerGrabbing();
     timer = 0;
     timerLimit = 7;
+    objectLimit = 200;
 }
 
 //--------------------------------------------------------------
 void Box2dController::update(){
     box2D.update();
-//    ofRemove(circles, removeShapeOffScreen);画面外のモノを削除
+    setBox2dBound();
+    ofRemove(circles, removeShapeOffScreen);
 }
 
 //--------------------------------------------------------------
@@ -76,9 +78,10 @@ void Box2dController::drawFaceLine(vector <ofPolyline> faceLines,bool faceDrawFl
         for (int i =0 ; i < faceLines.size(); i++){
             faceLines[i].simplify();
             faceEdge[i].destroy();
-            for(int j=0; j<faceLines[i].size(); j ++){
-                faceEdge[i].addVertex(faceLines[i][j]);
-            }
+//            for(int j=0; j<faceLines[i].size(); j ++){
+//                faceEdge[i].addVertex(faceLines[i][j]);
+//            }
+            faceEdge[i].addVertexes(faceLines[i]);
             faceEdge[i].create(box2D.getWorld());
             
             if(faceDrawFlg){
@@ -95,9 +98,11 @@ void Box2dController::addLineEdges(vector <ofPolyline> lines){
     shared_ptr<ofxBox2dEdge> edge = std::make_shared<ofxBox2dEdge>();
     lines.back().simplify();
     
-    for(int i=0; i<lines.back().size(); i ++){
-        edge.get() -> addVertex(lines.back()[i]);
-    }
+//    for(int i=0; i<lines.back().size(); i ++){
+//        edge.get() -> addVertex(lines.back()[i]);
+//    }
+//
+    edge.get() -> addVertexes(lines.back());
     
     edge.get()->create(box2D.getWorld());
     edges.push_back(edge);
@@ -149,7 +154,7 @@ void Box2dController::fallCircleFromIos(ofColor color,float radisu){
     circles.back().get()->color = color;
     circles.back().get()->volRadius = 0.0;
     circles.back().get()->setup(box2D.getWorld(), ofRandom(0, ofGetWidth()), -300, radisu);
-//    circles.back().get()->addForce(ofVec2f(0,ofRandom(-30,30)), ofRandom(100,150));
+    circles.back().get()->addForce(ofVec2f(0,ofRandom(-30,30)), ofRandom(100,150));
 }
 //--------------------------------------------------------------
 void Box2dController::fireRightCircle(){
@@ -182,11 +187,21 @@ void Box2dController::setCircleFireDirection(){
     }
 }
 
+void Box2dController::setBox2dBound(){
+    if(circles.size() + boxes.size() > objectLimit){
+        box2D.createBounds(0, 0, 0, 0);
+        box2D.checkBounds(false);
+    }else{
+        box2D.createBounds();
+        box2D.checkBounds(true);
+    }
+}
+
 //--------------------------------------------------------------
 
-//bool Box2dController::removeShapeOffScreen(shared_ptr<CustomParticle> shape) {
-//    if (!ofRectangle(-30, -400, ofGetWidth()+100, ofGetHeight()+400).inside(shape.get()->getPosition())) {
-//        return true;
-//    }
-//    return false;
-//}
+bool Box2dController::removeShapeOffScreen(shared_ptr<CustomParticle> shape) {
+    if (!ofRectangle(-150, -150, ofGetWidth()+300, ofGetHeight()+300).inside(shape.get()->getPosition())) {
+        return true;
+    }
+    return false;
+}

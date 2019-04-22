@@ -55,17 +55,19 @@ public:
     void clear();
     void clearFaceEdge();
     void pushFaceEdgeInstance();
+    void setBox2dBound();
     
     ofxBox2d box2D;
     int timer;
     int timerLimit;
+    int objectLimit;
     
     vector <ofPtr <CustomParticle> > circles;
     vector <ofPtr <ofxBox2dRect> > boxes;
     vector <shared_ptr <ofxBox2dEdge> > edges;
     vector <ofxBox2dEdge> faceEdge;
     
-//    static bool removeShapeOffScreen(shared_ptr<CustomParticle> shape);
+    static bool removeShapeOffScreen(shared_ptr<CustomParticle> shape);
     
 };
 
