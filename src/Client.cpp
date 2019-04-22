@@ -12,42 +12,26 @@
 //--------------------------------------------------------------
 void Client::update(ofxOscMessage message){
     ofxOscMessage m = message;
-    touchUp = false;
+//    touchUp = false;
     
-    if ( m.getAddress() == "/touchDown/position"){
-        clientLines.push_back(ofPolyline());
+    if ( m.getAddress() == "/touch/position"){
+//        clientLines.push_back(ofPolyline());
         pos.x = ofGetWidth() * m.getArgAsFloat(0);
         pos.y = ofGetHeight() * m.getArgAsFloat(1);
-        clientLines.back().addVertex(pos);
+//        clientLines.back().addVertex(pos);
     }
     
-    if ( m.getAddress() == "/touchMoved/position"){
-        pos.x = ofGetWidth() * m.getArgAsFloat(0);
-        pos.y = ofGetHeight() * m.getArgAsFloat(1);
-        clientLines.back().addVertex(pos);
-    }
+//    if ( m.getAddress() == "/touchMoved/position"){
+//        pos.x = ofGetWidth() * m.getArgAsFloat(0);
+//        pos.y = ofGetHeight() * m.getArgAsFloat(1);
+//        clientLines.back().addVertex(pos);
+//    }
+//
+//    if ( m.getAddress() == "/deleteCircle/info"){
+//        color.r = m.getArgAsFloat(0);
+//        color.g = m.getArgAsFloat(1);
+//        color.b = m.getArgAsFloat(2);
+//        radius = m.getArgAsFloat(3);
+//    }
     
-    if ( m.getAddress() == "/deleteCircle/info"){
-        color.r = m.getArgAsFloat(0);
-        color.g = m.getArgAsFloat(1);
-        color.b = m.getArgAsFloat(2);
-        radius = m.getArgAsFloat(3);
-    }
-    
-}
-
-//--------------------------------------------------------------
-void Client::draw(){
-    ofNoFill();
-    ofSetLineWidth(2.0);
-    ofSetColor(ofColor::red);
-    
-    for (int i=0; i<clientLines.size(); i++) {
-        clientLines[i].draw();
-    }
-}
-
-//--------------------------------------------------------------
-void Client::clear(){
-    clientLines.clear();
 }

@@ -43,7 +43,6 @@ public:
     void addCircle();
     void fallCircleFromIos(ofColor color,float radisu);
     void addInervalCircle();
-    void addLineEdges(vector <ofPolyline> lines);
     
     void changeCircleRadius(ofPtr <CustomParticle> circle, float scaledVol);
     void checkExplosion(ofPtr <CustomParticle> circle, float smoothedVol);
@@ -64,10 +63,10 @@ public:
     
     vector <ofPtr <CustomParticle> > circles;
     vector <ofPtr <ofxBox2dRect> > boxes;
-    vector <shared_ptr <ofxBox2dEdge> > edges;
     vector <ofxBox2dEdge> faceEdge;
     
     static bool removeShapeOffScreen(shared_ptr<CustomParticle> shape);
+    static bool removeBox2dRectOffScreen(shared_ptr<ofxBox2dRect> shape);
     
 };
 

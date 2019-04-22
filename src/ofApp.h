@@ -10,7 +10,6 @@
 #include "ofxFaceTracker2.h"
 #include "ofxBox2d.h"
 #include "ofxOpenCv.h"
-#include "Client.hpp"
 #include "Box2dController.hpp"
 #define PORT 8888
 
@@ -22,9 +21,6 @@ public:
     void update();
     void draw();
     void keyPressed(int key);
-    void mouseDragged(int x, int y, int button);
-    void mousePressed(int x, int y, int button);
-    void mouseReleased(int x, int y, int button);
     void drawTextUI();
     void drawEdgeLine();
     void setFaceLine();
@@ -40,7 +36,6 @@ public:
     ofVideoGrabber grabber;
     ofxCvColorImage colorImg;
 
-    vector <ofPolyline> lines;//線の配列
     vector <ofPolyline> faceLines;
     
     ofSoundStream soundStream;
@@ -50,7 +45,6 @@ public:
     
     void updateClient();
     ofxOscReceiver  receiver;
-    Client client;
     Box2dController box2dController;
     
 };

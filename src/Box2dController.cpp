@@ -13,13 +13,11 @@
 void Box2dController::setup(){
     box2D.init();
     box2D.setGravity(0, 5);
-    box2D.createBounds();//周囲に壁を設置★
-//    box2D.createGround();
+    box2D.createBounds();
     box2D.setFPS(30.0);
-//    box2D.registerGrabbing();
     timer = 0;
     timerLimit = 7;
-    objectLimit = 200;
+    objectLimit = 400;
 }
 
 //--------------------------------------------------------------
@@ -27,6 +25,7 @@ void Box2dController::update(){
     box2D.update();
     setBox2dBound();
     ofRemove(circles, removeShapeOffScreen);
+    ofRemove(boxes, removeBox2dRectOffScreen);
 }
 
 //--------------------------------------------------------------
@@ -39,7 +38,6 @@ void Box2dController::draw(float scaledVol, float smoothedVol){
 void Box2dController::clear(){
     circles.clear();
     boxes.clear();
-    edges.clear();
     faceEdge.clear();
 }
 
@@ -78,10 +76,10 @@ void Box2dController::drawFaceLine(vector <ofPolyline> faceLines,bool faceDrawFl
         for (int i =0 ; i < faceLines.size(); i++){
             faceLines[i].simplify();
             faceEdge[i].destroy();
-//            for(int j=0; j<faceLines[i].size(); j ++){
-//                faceEdge[i].addVertex(faceLines[i][j]);
-//            }
-            faceEdge[i].addVertexes(faceLines[i]);
+            for(int j=0; j<faceLines[i].size(); j ++){
+                faceEdge[i].addVertex(faceLines[i][j]);
+            }
+//            faceEdge[i].addVertexes(faceLines[i]);
             faceEdge[i].create(box2D.getWorld());
             
             if(faceDrawFlg){
@@ -92,21 +90,6 @@ void Box2dController::drawFaceLine(vector <ofPolyline> faceLines,bool faceDrawFl
     }
 }
 
-
-//--------------------------------------------------------------
-void Box2dController::addLineEdges(vector <ofPolyline> lines){
-    shared_ptr<ofxBox2dEdge> edge = std::make_shared<ofxBox2dEdge>();
-    lines.back().simplify();
-    
-//    for(int i=0; i<lines.back().size(); i ++){
-//        edge.get() -> addVertex(lines.back()[i]);
-//    }
-//
-    edge.get() -> addVertexes(lines.back());
-    
-    edge.get()->create(box2D.getWorld());
-    edges.push_back(edge);
-}
 
 //--------------------------------------------------------------
 void Box2dController::changeCircleRadius(ofPtr <CustomParticle> circle, float scaledVol){
@@ -200,6 +183,15 @@ void Box2dController::setBox2dBound(){
 //--------------------------------------------------------------
 
 bool Box2dController::removeShapeOffScreen(shared_ptr<CustomParticle> shape) {
+    if (!ofRectangle(-150, -150, ofGetWidth()+300, ofGetHeight()+300).inside(shape.get()->getPosition())) {
+        return true;
+    }
+    return false;
+}
+
+//--------------------------------------------------------------
+
+bool Box2dController::removeBox2dRectOffScreen(shared_ptr<ofxBox2dRect> shape) {
     if (!ofRectangle(-150, -150, ofGetWidth()+300, ofGetHeight()+300).inside(shape.get()->getPosition())) {
         return true;
     }

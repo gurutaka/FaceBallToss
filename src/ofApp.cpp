@@ -1,7 +1,4 @@
 #include "ofApp.h"
-#include "ofxOsc.h"
-
-
 
 //--------------------------------------------------------------
 void ofApp::setup(){
@@ -72,9 +69,6 @@ void ofApp::draw(){
     
     box2dController.drawFaceLine(faceLines, faceDrawFlg);
     box2dController.draw(scaledVol, smoothedVol);
-    drawEdgeLine();
-    client.draw();
-    
     
     ofPopStyle();
     ofPopMatrix();
@@ -98,16 +92,6 @@ void ofApp::setMicrophoneSetting(){
 }
 
 //--------------------------------------------------------------
-void ofApp::drawEdgeLine(){
-    ofNoFill();
-    ofSetLineWidth(2.0);
-    ofSetColor(ofColor::white);
-    for (int i=0; i<lines.size(); i++) {
-        lines[i].draw();
-    }
-}
-
-//--------------------------------------------------------------
 void ofApp::setFaceLine(){
     if(tracker.size()>0){
         for (int faceNum = 0;faceNum < tracker.size(); faceNum++){
@@ -120,6 +104,7 @@ void ofApp::setFaceLine(){
                 for(int j=0; j< facePoints.size();j++){
                     faceLines.back().addVertex(facePoints[j].x, facePoints[j].y);
                 }
+                
                 
                 if(i == 4 || i == 5 || i == 9 || i == 10){
                     faceLines.back().addVertex(facePoints[0].x, facePoints[0].y);
@@ -134,21 +119,18 @@ void ofApp::updateClient(){
     while( receiver.hasWaitingMessages() ){
         ofxOscMessage m;
         receiver.getNextMessage(m);
-        client.update(m);
         
-        if(m.getAddress() == "/deleteCircle/info"){
-            box2dController.fallCircleFromIos(client.color,client.radius);
+        if(m.getAddress() == "/touchDown/position" || m.getAddress() == "/touchMoved/position"){
+            ofPoint pos;
+            pos.x = ofGetWidth() * m.getArgAsFloat(0);
+            pos.y = ofGetHeight() * m.getArgAsFloat(1);
+            box2dController.addBox(pos.x,pos.y);
         }
-        
-        if(m.getAddress() == "/touchUp/position"){
-            box2dController.addLineEdges(client.clientLines);
-        }
+
     }
 
     
 }
-
-
 //--------------------------------------------------------------
 void ofApp::audioIn(ofSoundBuffer & input){
     
@@ -199,33 +181,11 @@ void ofApp::drawTextUI(){
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
     
-    if(key == 'b'){
-        box2dController.addBox(mouseX, mouseY);
-    }
-    
     if(key == 'f'){
         faceDrawFlg = !faceDrawFlg;
     }
     
     if(key == ' '){
-        lines.clear();
         box2dController.clear();
-        client.clear();
     }
-}
-
-//--------------------------------------------------------------
-void ofApp::mouseDragged(int x, int y, int button){
-    lines.back().addVertex(x,y);//最後の要素に頂点を追加
-}
-
-//--------------------------------------------------------------
-void ofApp::mousePressed(int x, int y, int button){
-    lines.push_back(ofPolyline());//プッシュ
-    lines.back().addVertex(x,y);//最後の要素に頂点を追加
-}
-
-//--------------------------------------------------------------
-void ofApp::mouseReleased(int x, int y, int button){
-    box2dController.addLineEdges(lines);
 }
