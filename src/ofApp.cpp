@@ -12,6 +12,7 @@ void ofApp::setup(){
     ofSetWindowShape(width, height);
     grabber.setup(width,height);
     colorImg.allocate(width,height);
+    setMicrophoneSetting();
     
     tracker.setup();
     
@@ -22,7 +23,6 @@ void ofApp::setup(){
     
 
     receiver.setup( PORT );
-    setMicrophoneSetting();
     box2dController.setup();
 
 }
@@ -79,10 +79,14 @@ void ofApp::draw(){
 void ofApp::setMicrophoneSetting(){
     ofSoundStreamSettings settings;
     
+    ofSoundStreamListDevices();
+    
     auto devices = soundStream.getMatchingDevices("default");
+
     if(!devices.empty()){
         settings.setInDevice(devices[0]);
     }
+
     settings.setInListener(this);
     settings.sampleRate = 44100;
     settings.numOutputChannels = 0;
@@ -143,17 +147,9 @@ void ofApp::audioIn(ofSoundBuffer & input){
     for (size_t i = 0; i < input.getNumFrames(); i++){
         
         float left = 0;
-        float right = 0;
-        
-        if (input[i*2]*0.5 > 0) {
-            left = input[i*2]*0.5;
-        }
-        if(input[i*2 + 1]*0.5 > 0 ){
-            right = input[i*2 + 1]*0.5;
-        }
-        
-        curVol += pow (left, 2) + pow (right, 2) ;
-        numCounted+=2;
+        left = input[i]*0.5;//channel only 1
+        curVol += pow (left, 2);
+        numCounted ++;
     }
     
     
