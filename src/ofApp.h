@@ -11,6 +11,7 @@
 #include "ofxBox2d.h"
 #include "ofxOpenCv.h"
 #include "Box2dController.hpp"
+#include "ofxOsc.h"
 #define PORT 8888
 
 // -------------------------------------------------

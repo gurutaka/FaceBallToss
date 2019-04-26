@@ -10,7 +10,6 @@
 
 #include "ofxBox2d.h"
 #include "ofMain.h"
-#include "Client.hpp"
 
 
 class CustomParticle : public ofxBox2dCircle {
