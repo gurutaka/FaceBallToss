@@ -4,14 +4,21 @@
 void ofApp::setup(){
     
     ofSetFrameRate(60);
+        // Setup grabber
+////  width = 1280 ;
+//    width = 1280 ;
+//    height = 720 ;
+//
+//    ofSetFullscreen(true);
+    width = 1920;
+    height = 1080;
     
-    // Setup grabber
-    width = 1280;
-    height = 720;
+    std::cout << "height: " << height << endl;
     
     ofSetWindowShape(width, height);
-    grabber.setup(width,height);
-    colorImg.allocate(width,height);
+    grabber.setDeviceID(0);
+    grabber.setup(width, height);
+    colorImg.allocate(grabber.getWidth() ,grabber.getHeight());
     setMicrophoneSetting();
     
     tracker.setup();
@@ -35,7 +42,7 @@ void ofApp::update(){
     
     scaledVol = ofMap(smoothedVol, 0.02, 0.17, 0.0, 1.0, true);
     grabber.update();
-    colorImg.setFromPixels(grabber.getPixels().getData(), width, height);
+    colorImg.setFromPixels(grabber.getPixels().getData(), grabber.getWidth(), grabber.getHeight());
     colorImg.mirror(false, true);
     
     if(grabber.isFrameNew()){
@@ -62,7 +69,7 @@ void ofApp::draw(){
     colorImg.draw(0,0, width,height);
     
     // Draw text UI
-    drawTextUI();
+//    drawTextUI();
     
     ofPushMatrix();
     ofPushStyle();
@@ -106,12 +113,13 @@ void ofApp::setFaceLine(){
                 box2dController.pushFaceEdgeInstance();
 
                 for(int j=0; j< facePoints.size();j++){
-                    faceLines.back().addVertex(facePoints[j].x, facePoints[j].y);
+                    faceLines.back().addVertex(facePoints[j].x * width/1280, facePoints[j].y * height/720);
+//                    faceLines.back().addVertex(facePoints[j].x, facePoints[j].y );
                 }
                 
-                
                 if(i == 4 || i == 5 || i == 9 || i == 10){
-                    faceLines.back().addVertex(facePoints[0].x, facePoints[0].y);
+                    faceLines.back().addVertex(facePoints[0].x * width/1280, facePoints[0].y * height/720);
+//                    faceLines.back().addVertex(facePoints[0].x, facePoints[0].y );
                 }
             }
         }
@@ -179,6 +187,10 @@ void ofApp::keyPressed(int key){
     
     if(key == 'f'){
         faceDrawFlg = !faceDrawFlg;
+    }
+    
+    if(key == 'b'){
+        box2dController.addBox(mouseX, mouseY);
     }
     
     if(key == ' '){
