@@ -4,17 +4,10 @@
 void ofApp::setup(){
     
     ofSetFrameRate(60);
-        // Setup grabber
-////  width = 1280 ;
-//    width = 1280 ;
-//    height = 720 ;
-//
 //    ofSetFullscreen(true);
     ofSetDataPathRoot("../Resources/data/");
     width = 1920;
     height = 1080;
-    
-    std::cout << "height: " << height << endl;
     
     ofSetWindowShape(width, height);
     grabber.setDeviceID(0);
@@ -39,7 +32,8 @@ void ofApp::setup(){
 //--------------------------------------------------------------
 void ofApp::update(){
     
-    updateClient();
+//    OSC通信→四角いチリ＠なし
+//    updateClient();
     
     scaledVol = ofMap(smoothedVol, 0.02, 0.17, 0.0, 1.0, true);
     grabber.update();
