@@ -31,7 +31,8 @@ public:
     int width;
     int height;
     bool faceDrawFlg;
-
+    bool breathFlg;
+    bool breathMaxFlg;
     
     ofxFaceTracker2 tracker;
     ofVideoGrabber grabber;
@@ -45,7 +46,13 @@ public:
     void audioIn(ofSoundBuffer & input);
     
     void updateClient();
+    void playSoundbreath();
     ofxOscReceiver  receiver;
     Box2dController box2dController;
+    ofSoundPlayer sound;
+    ofSoundPlayer soundMax;
+    ofSoundPlayer backmusic;
     
+    void backmusicPlay();
+    int breathSoundTime = 0;
 };

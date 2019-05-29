@@ -22,9 +22,12 @@ void ofApp::setup(){
     smoothedVol = 0.0;
     scaledVol = 0.0;
     
-
+    sound.load("breath/sound3.mp3");
+    soundMax.load("breath/sound5.mp3");
     receiver.setup( PORT );
     box2dController.setup();
+    
+    backmusicPlay();
 
 }
 
@@ -50,9 +53,9 @@ void ofApp::update(){
     //顔のラインをreset
     faceLines.clear();
     box2dController.clearFaceEdge();
-    
     setFaceLine();
-
+    playSoundbreath();
+    
 }
 
 
@@ -75,6 +78,34 @@ void ofApp::draw(){
     ofPopStyle();
     ofPopMatrix();
     
+}
+
+void ofApp::playSoundbreath(){
+    breathSoundTime ++;
+    if(!breathFlg && smoothedVol > 0.05){
+        breathFlg = true;
+        sound.play();
+        breathSoundTime = 0;
+    }else if(breathFlg && smoothedVol < 0.05 && breathSoundTime > 50){
+        breathFlg = false;
+    }
+    
+    if(!breathMaxFlg && smoothedVol > 0.2){
+        breathMaxFlg = true;
+        soundMax.play();
+    }else if(breathMaxFlg && smoothedVol < 0.2){
+        breathMaxFlg = false;
+    }
+    
+    
+}
+
+
+//--------------------------------------------------------------
+void ofApp::backmusicPlay(){
+    backmusic.load("backmusic.mp3");
+    backmusic.setLoop(true);
+    backmusic.play();
 }
 
 //--------------------------------------------------------------

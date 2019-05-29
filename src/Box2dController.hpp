@@ -12,28 +12,40 @@
 #include "ofMain.h"
 
 
+class SoundData {
+public:
+    int  soundID;
+    bool bHit;
+};
+
+
+
 class CustomParticle : public ofxBox2dCircle {
 public:
     ofColor color;
     ofImage texture;
+    ofSoundPlayer sound;
+    bool stopSounded;
     float volRadius;
-    void setuo(){
+    void init(){
         setPhysics(3.0 * 10, 0.53 / 3, 0.1 * 10);
         volRadius = 0.0;
         texture.setAnchorPercent(0.5, 0.5);
+        float circRadA = 100.0;
     }
-    void draw() {
-        float radius = getRadius() + volRadius;
-        glPushMatrix();
-        glTranslatef(getPosition().x, getPosition().y, 0);
-        
-        ofSetColor(color.r, color.g, color.b);
-        ofFill();
-        ofDrawCircle(0, 0, radius);
-        glPopMatrix();
-    }
+//    void draw() {
+//        float radius = getRadius() + volRadius;
+//        glPushMatrix();
+//        glTranslatef(getPosition().x, getPosition().y, 0);
+//        ofSetColor(color.r, color.g, color.b);
+//        ofFill();
+//        ofDrawCircle(0, 0, radius);
+//        glPopMatrix();
+//    }
+    
     
     void drawTexture() {
+
         float radius = ( getRadius() + volRadius ) * 2;
         ofPushMatrix();
         ofPushStyle();
@@ -75,11 +87,13 @@ public:
     int timer;
     int timerLimit;
     int objectLimit;
+    void contactStart(ofxBox2dContactArgs &e);
     
     vector <ofPtr <CustomParticle> > circles;
     vector <ofPtr <ofxBox2dRect> > boxes;
     vector <ofxBox2dEdge> faceEdge;
     vector <ofImage> textures;
+    vector <ofSoundPlayer> sounds;
     
     static bool removeShapeOffScreen(shared_ptr<CustomParticle> shape);
     static bool removeBox2dRectOffScreen(shared_ptr<ofxBox2dRect> shape);

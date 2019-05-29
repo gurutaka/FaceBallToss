@@ -12,13 +12,23 @@
 //--------------------------------------------------------------
 void Box2dController::setup(){
     box2D.init();
+    box2D.enableEvents();
     box2D.setGravity(0, 5);
     box2D.createBounds();
     box2D.setFPS(30.0);
     timer = 0;
-    timerLimit = 7;
+    timerLimit = 10;
     objectLimit = 400;
     initTexture();
+    ofAddListener(box2D.contactStartEvents, this, &Box2dController::contactStart);
+    
+    ofDirectory dir;//data直下
+    int n = dir.listDir("sounds");
+    for (int i=0; i<n; i++) {
+        ofSoundPlayer sound;
+        sound.load(dir.getPath(i));
+        sounds.push_back(sound);
+    }
 }
 
 //--------------------------------------------------------------
@@ -28,6 +38,20 @@ void Box2dController::initTexture(){
     int n = dir.listDir("textures");
     for (int i=0; i<n; i++) {
         textures.push_back(ofImage(dir.getPath(i)));
+    }
+}
+
+//--------------------------------------------------------------
+void Box2dController::contactStart(ofxBox2dContactArgs &e) {
+    
+
+    if(e.a->GetType() == b2Shape::e_circle && e.b->GetType() == b2Shape::e_circle) {
+        
+//        CustomParticle * aData = (CustomParticle*)e.a->GetBody()->GetUserData();
+        
+        SoundData * aData = (SoundData*)e.a->GetBody()->GetUserData();
+        SoundData * bData = (SoundData*)e.b->GetBody()->GetUserData();
+//        std::cout << "value: " << aData << endl;
     }
 }
 
@@ -133,11 +157,15 @@ void Box2dController::addInervalCircle(){
 }
 //--------------------------------------------------------------
 void Box2dController::addCircle(){
+//    sounds[(int)ofRandom(sounds.size())].play();
     circles.push_back(std::make_shared<CustomParticle>());
     circles.back().get()->texture = textures[(int)ofRandom(textures.size())];
-    circles.back().get()->setuo();
+    circles.back().get()->init();
     setCircleFireDirection();
-}f
+    
+//    ★setDataに入れる意味
+    
+}
 
 //--------------------------------------------------------------
 void Box2dController::fireRightCircle(){
