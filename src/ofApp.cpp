@@ -47,9 +47,10 @@ void ofApp::update(){
         tracker.update(colorImg);
     }
     
+    //★
     box2dController.update();
     box2dController.addInervalCircle();
-    
+
     //顔のラインをreset
     faceLines.clear();
     box2dController.clearFaceEdge();
@@ -67,14 +68,14 @@ void ofApp::draw(){
     colorImg.draw(0,0, width,height);
     
     // Draw text UI
-//    drawTextUI();
+    drawTextUI();
     
     ofPushMatrix();
     ofPushStyle();
-    
+
     box2dController.drawFaceLine(faceLines, faceDrawFlg);
     box2dController.draw(scaledVol, smoothedVol);
-    
+
     ofPopStyle();
     ofPopMatrix();
     
@@ -87,16 +88,16 @@ void ofApp::playSoundbreath(){
         sound.play();
         breathSoundTime = 0;
     }else if(breathFlg && smoothedVol < 0.05 && breathSoundTime > 50){
+        breathSoundTime = 0;
         breathFlg = false;
     }
     
-    if(!breathMaxFlg && smoothedVol > 0.2){
+    if(!breathMaxFlg && smoothedVol > 0.18){
         breathMaxFlg = true;
         soundMax.play();
-    }else if(breathMaxFlg && smoothedVol < 0.2){
-        breathMaxFlg = false;
+    }else if(breathMaxFlg && smoothedVol < 0.18){
+         breathMaxFlg= false;
     }
-    
     
 }
 

@@ -87,7 +87,7 @@ public:
     int timer;
     int timerLimit;
     int objectLimit;
-    void contactStart(ofxBox2dContactArgs &e);
+//    void contactStart(ofxBox2dContactArgs &e);
     
     vector <ofPtr <CustomParticle> > circles;
     vector <ofPtr <ofxBox2dRect> > boxes;

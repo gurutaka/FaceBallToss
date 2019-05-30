@@ -20,15 +20,15 @@ void Box2dController::setup(){
     timerLimit = 10;
     objectLimit = 400;
     initTexture();
-    ofAddListener(box2D.contactStartEvents, this, &Box2dController::contactStart);
+//    ofAddListener(box2D.contactStartEvents, this, &Box2dController::contactStart);
     
-    ofDirectory dir;//data直下
-    int n = dir.listDir("sounds");
-    for (int i=0; i<n; i++) {
-        ofSoundPlayer sound;
-        sound.load(dir.getPath(i));
-        sounds.push_back(sound);
-    }
+//    ofDirectory dir;//data直下
+//    int n = dir.listDir("sounds");
+//    for (int i=0; i<n; i++) {
+//        ofSoundPlayer sound;
+//        sound.load(dir.getPath(i));
+//        sounds.push_back(sound);
+//    }
 }
 
 //--------------------------------------------------------------
@@ -42,18 +42,18 @@ void Box2dController::initTexture(){
 }
 
 //--------------------------------------------------------------
-void Box2dController::contactStart(ofxBox2dContactArgs &e) {
-    
-
-    if(e.a->GetType() == b2Shape::e_circle && e.b->GetType() == b2Shape::e_circle) {
-        
-//        CustomParticle * aData = (CustomParticle*)e.a->GetBody()->GetUserData();
-        
-        SoundData * aData = (SoundData*)e.a->GetBody()->GetUserData();
-        SoundData * bData = (SoundData*)e.b->GetBody()->GetUserData();
-//        std::cout << "value: " << aData << endl;
-    }
-}
+//void Box2dController::contactStart(ofxBox2dContactArgs &e) {
+//
+//
+//    if(e.a->GetType() == b2Shape::e_circle && e.b->GetType() == b2Shape::e_circle) {
+//
+////        CustomParticle * aData = (CustomParticle*)e.a->GetBody()->GetUserData();
+//
+//        SoundData * aData = (SoundData*)e.a->GetBody()->GetUserData();
+//        SoundData * bData = (SoundData*)e.b->GetBody()->GetUserData();
+////        std::cout << "value: " << aData << endl;
+//    }
+//}
 
 //--------------------------------------------------------------
 void Box2dController::update(){
